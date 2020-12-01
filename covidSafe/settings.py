@@ -11,7 +11,15 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+<<<<<<< Updated upstream
 from decouple import config
+=======
+<<<<<<< HEAD
+import os
+=======
+from decouple import config
+>>>>>>> 474e017e4b38300935c821330cf1fc76493f3776
+>>>>>>> Stashed changes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,10 +35,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
-
-STATICFILES_DIRS = ["../static"]
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -126,3 +130,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
