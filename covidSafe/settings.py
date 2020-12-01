@@ -11,21 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 from decouple import config
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
 import os
-=======
-from decouple import config
->>>>>>> 474e017e4b38300935c821330cf1fc76493f3776
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
