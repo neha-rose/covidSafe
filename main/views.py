@@ -2,7 +2,7 @@
 
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from .forms import RegisterForm
+from forms import RegisterForm
 
 def welcomepage(request):
     return render(request, "main/welcome.html", {})
