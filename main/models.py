@@ -36,6 +36,6 @@ class HomeDeliveryOrder(models.Model):
     cust_id = models.ForeignKey(Customer,on_delete=models.CASCADE)
     emp_id = models.ForeignKey(Employee,on_delete=models.CASCADE)
 
-class User(models.Model):                   #for second pw
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=50)    
+#class User(models.Model):                   #for second pw
+    #username = models.CharField(max_length=100)
+    #password = models.CharField(max_length=50)    
