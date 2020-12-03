@@ -1,5 +1,9 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% block css %}
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'css/welcome.css' %}" rel="stylesheet" />
+{% endblock %}
 {% block content %}
         {% include "main/nav.html" %}
         <header class="masthead">
@@ -11,15 +15,11 @@
                         <hr class="divider my-4" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">COVIDSafe can help you to store and manage information of your customers and employees. You can conduct contact tracing with just a click!</p>
-                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="register/">Sign Up</a>
-                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="login/">Login</a>
+                        <p class="text-white-75 font-weight-light mb-5">COVIDSafe helps you to store and manage information about your customers and employees with ease. You can conduct contact tracing with just a click!</p>
+                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="/register">Sign Up</a>
+                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="/login">Login</a>
                     </div>
                 </div>
             </div>
         </header>
-        <!-- Footer-->
-        <footer class="bg-light py-5">
-            <div class="container"><div class="small text-center text-muted">Copyright © 2020 - COVIDSafe</div></div>
-        </footer>
  {% endblock %}
