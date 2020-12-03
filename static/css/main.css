@@ -310,7 +310,7 @@ iframe {
   -moz-transition: all 0.6s;
   transition: all 0.6s;
 
-  background: #57b846;
+  background: #2e3d4d;
 }
 
 
@@ -376,7 +376,7 @@ input.input100 {
 }
 
 .input-checkbox100:checked + .label-checkbox100::before {
-  color: #57b846;
+  color: #2e3d4d;
 }
 
 /*------------------------------------------------------------------
