@@ -10,3 +10,10 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ( 'shop_name',  'email', 'password1', 'password2' )
+
+class UserForm(forms.ModelForm):            #for second pw
+    class Meta:
+        model = User
+        widgets = {
+        'password': forms.PasswordInput(),
+    }        
