@@ -3,6 +3,7 @@
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from .forms import RegisterForm
+from django.contrib.auth.forms import UserCreationForm
 
 def welcomepage(request):
     return render(request, "main/welcome.html", {})
@@ -19,4 +20,4 @@ def register(request):
             return redirect('main:home')
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'main/register.html', {'form': form})
