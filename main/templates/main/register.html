@@ -1,4 +1,7 @@
+
+
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +42,12 @@
 					</span>
 				</div>
 
-				<form class="login100-form validate-form">
+
+            {% block content %}
+					
+		
+				<form class="login100-form validate-form" method="POST">
+					{% csrf_token %}
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Shop Name is required">
 						<span class="label-input100">Shop Name</span>
 						<input class="input100" type="text" name="shop name" placeholder="Enter Shop Name">
@@ -74,10 +82,11 @@
 						</button> 
 					</div>
 				</form>
+			{% endblock %}
 			</div>
 		</div>
 	</div>
-	
+    
 <!--===============================================================================================-->
 	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <!--===============================================================================================-->
