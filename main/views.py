@@ -17,10 +17,14 @@ def register(request):
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=email, password=raw_password)
+            messages.success(request, f"New account created!")
             login(request, user)
             return redirect('main:home')
     else:
-        form = RegisterForm()
+        for msg in form.error_messages:
+            messages.error(request, f"{msg}: {form.error_messages[msg]}")
+        return render(request, 'main/register.html', {'form': form})
+    form = RegisterForm()
     return render(request, 'main/register.html', {'form': form})
 
 def login_req(request):
@@ -40,10 +44,10 @@ def login_req(request):
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request = request,
-                    template_name = "main/login.html",
+                    template_name = 'main/login.html',
                     context={"form":form})
 
 def logout_req(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect("main:welcomepage")                    
+    return redirect('main:home')                    
