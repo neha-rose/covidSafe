@@ -14,9 +14,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            email = form.cleaned_data.get('email')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=email, password=raw_password)
+            user = form.save()
             login(request, user)
             return redirect('main:home')
     else:
@@ -33,7 +31,7 @@ def login_req(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}")
-                return redirect('/')
+                return redirect('main:home')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -46,4 +44,7 @@ def login_req(request):
 def logout_req(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect("main:welcomepage")                    
+    return redirect("main:welcomepage")  
+
+def homepage(request):
+    return render(request, "main/home.html", {})      

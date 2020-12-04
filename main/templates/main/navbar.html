@@ -1,5 +1,9 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #2e3d4d;">
-    <a class="navbar-brand" href="#">COVIDSafe</a>
+  {% if user.is_authenticated %}  
+    <a class="navbar-brand" href="/home">COVIDSafe</a>
+  {% else %}
+    <a class="navbar-brand" href="/">COVIDSafe</a>
+  {% endif %}
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ml-auto">
         {% if user.is_authenticated %}

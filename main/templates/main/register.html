@@ -1,15 +1,8 @@
-
-
+{% extends "main/base.html" %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Register</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block css %}
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}"/>
+	<link rel="icon" type="image/png" href="{% static 'assets/img/favicon.ico' %}"/>
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <!--===============================================================================================-->
@@ -30,8 +23,8 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 <!--===============================================================================================-->
-</head>
-<body>
+{% endblock %}
+{% block content %}
 	
 	<div class="limiter">
 		<div class="container-login100">
@@ -41,16 +34,17 @@
 						Register
 					</span>
 				</div>
-
-
-            {% block content %}
 					
-		
 				<form class="login100-form validate-form" method="POST">
 					{% csrf_token %}
+					<div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+						<span class="label-input100">Username</span>
+						<input class="input100" type="text" name="username" placeholder="Enter Username">
+						<span class="focus-input100"></span>
+					</div>
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Shop Name is required">
 						<span class="label-input100">Shop Name</span>
-						<input class="input100" type="text" name="shop name" placeholder="Enter Shop Name">
+						<input class="input100" type="text" name="shop_name" placeholder="Enter Shop Name">
 						<span class="focus-input100"></span>
 					</div>
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Email is required">
@@ -61,32 +55,28 @@
 
 					<div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
 						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="pass" placeholder="Enter password">
+						<input class="input100" type="password" name="password1" placeholder="Enter password">
 						<span class="focus-input100"></span>
 					</div>
 					<div class="wrap-input100 validate-input m-b-18" data-validate = "Password Confirmation is required">
 						<span class="label-input100">Confirm Password</span>
-						<input class="input100" type="password" name="pass" placeholder="Confirm password">
+						<input class="input100" type="password" name="password2" placeholder="Confirm password">
 						<span class="focus-input100"></span>
 					</div>
 					<div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
 						<span class="label-input100">Admin Password</span>
-						<input class="input100" type="password" name="pass" placeholder="Enter admin password">
+						<input class="input100" type="password" name="admin_password" placeholder="Enter admin password">
 						<span class="focus-input100"></span>
 					</div>
-					
-
 					<div class="container-login100-form-btn">
-						<button class="btn btn-primary btn-xl js-scroll-trigger">
-							Register
-						</button> 
+						<input type="submit" value="Register" class="btn btn-primary btn-xl js-scroll-trigger">
 					</div>
 				</form>
-			{% endblock %}
 			</div>
 		</div>
 	</div>
-    
+{% endblock %}
+{% block js %}
 <!--===============================================================================================-->
 	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <!--===============================================================================================-->
@@ -103,6 +93,4 @@
 	<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
 <!--===============================================================================================-->
 	<script src="{% static 'js/main.js' %}"></script>
-
-</body>
-</html>
+{% endblock %}
