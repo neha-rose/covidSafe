@@ -21,10 +21,8 @@ def register(request):
             login(request, user)
             return redirect('main:home')
     else:
-        for msg in form.error_messages:
-            messages.error(request, f"{msg}: {form.error_messages[msg]}")
-        return render(request, 'main/register.html', {'form': form})
-    form = RegisterForm()
+        messages.error(request, f"Oops! Try again")
+        form = RegisterForm()
     return render(request, 'main/register.html', {'form': form})
 
 def login_req(request):
