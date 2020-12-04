@@ -13,11 +13,12 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
             user = form.save()
+            messages.success(request, f"New account created!")
             login(request, user)
             return redirect('main:home')
     else:
+        messages.error(request, f"Oops! Try again")
         form = RegisterForm()
     return render(request, 'main/register.html', {'form': form})
 
@@ -38,7 +39,7 @@ def login_req(request):
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request = request,
-                    template_name = "main/login.html",
+                    template_name = 'main/login.html',
                     context={"form":form})
 
 def logout_req(request):
@@ -48,3 +49,4 @@ def logout_req(request):
 
 def homepage(request):
     return render(request, "main/home.html", {})      
+    return redirect('main:home')                    
