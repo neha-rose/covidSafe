@@ -6,6 +6,7 @@ from .forms import RegisterForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 
+
 def welcomepage(request):
     return render(request, "main/welcome.html", {})
 
@@ -52,4 +53,14 @@ def logout_req(request):
 
 def homepage(request):
     return render(request, "main/home.html", {})      
-    return redirect('main:home')                    
+    return redirect('main:home')  
+
+def storevisit(request):
+    return render(request, "main/storevisit.html", {})      
+    return redirect('main:storevisit')
+
+def homedelivery(request):
+    return render(request, "main/homedelivery.html", {})      
+    return redirect('main:homedelivery')
+
+            
