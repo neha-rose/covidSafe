@@ -61,8 +61,7 @@ def logout_req(request):
     return redirect("main:welcomepage")  
 
 def homepage(request):
-    return render(request, "main/home.html", {})      
-    return redirect('main:home')  
+    return render(request, "main/home.html", {})
 
 def storevisit(request):
     return render(request, "main/storevisit.html", {})      
