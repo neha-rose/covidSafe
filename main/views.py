@@ -61,13 +61,15 @@ def logout_req(request):
     return redirect("main:welcomepage")  
 
 def homepage(request):
-    context = {'customers': Customer.objects.all}
-    return render(request, "main/home.html", context)  
+    return render(request, "main/home.html", {})      
+    return redirect('main:home')  
 
 def storevisit(request):
-    return render(request, "main/storevisit.html", {})
+    return render(request, "main/storevisit.html", {})      
+    
 
 def homedelivery(request):
-    return render(request, "main/homedelivery.html", {})
+    return render(request, "main/homedelivery.html", {})      
+    
 
             
