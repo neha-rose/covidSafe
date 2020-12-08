@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .models import Customer
 
+
 def welcomepage(request):
     return render(request, "main/welcome.html", {})
 
@@ -58,4 +59,12 @@ def logout_req(request):
 
 def homepage(request):
     context = {'customers': Customer.objects.all}
-    return render(request, "main/home.html", context)               
+    return render(request, "main/home.html", context)  
+
+def storevisit(request):
+    return render(request, "main/storevisit.html", {})
+
+def homedelivery(request):
+    return render(request, "main/homedelivery.html", {})
+
+            

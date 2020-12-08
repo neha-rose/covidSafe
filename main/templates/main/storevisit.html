@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+
+
+{% block content %}
+
+<h1>Add Store visits</h1>
+
+<br></br>
+
+
+<form method="POST">
+{% csrf_token %}
+  <label for="date">Date: </label>
+  <input type="date" name="date"><br>
+  <label for="visit id">Visit ID: </label>
+  <input type="text" name="visit id"><br>
+  <label for="cust id">Customer ID: </label>
+  <input type="text" name="cust id"><br>
+  <label for="temp">Body Temperature: </label>
+  <input type="text" name="temp" placeholder="In degree Celcius"><br>
+  <label for="in time">Check-in Time: </label>
+  <input type="time" name="in time"><br>
+  <label for="out time">Check-out Time: </label>
+  <input type="time" name="out time"><br>
+</form>
+<br>
+<input type="submit" value="Add">
+
+
+
+
+
+
+
+{% endblock %}
