@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Customer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     cust_id = models.AutoField(primary_key=True)
     cust_name = models.CharField(max_length=200)
     cust_age = models.IntegerField()
@@ -13,6 +14,7 @@ class Customer(models.Model):
         return self.cust_name
 
 class Employee(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     emp_id = models.AutoField(primary_key=True)
     emp_name = models.CharField(max_length=200)
     emp_age = models.IntegerField()

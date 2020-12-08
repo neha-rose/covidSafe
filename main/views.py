@@ -1,5 +1,5 @@
 # Create your views here.
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, UserProfileForm
@@ -60,6 +60,7 @@ def logout_req(request):
     messages.info(request, "Logged out successfully!")
     return redirect("main:welcomepage")  
 
+@login_required
 def homepage(request):
     return render(request, "main/home.html", {})
 
