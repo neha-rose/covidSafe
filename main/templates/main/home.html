@@ -1,5 +1,19 @@
 {% extends "main/base.html" %}
 {% block content %}
+<div class="container">
+<div class="row">
 {% include "main/sidebar.html" %}
-<div id="page-content-wrapper"></div>
+<div id="page-content-wrapper">
+    <div class="row justify-content-center">
+        <h1 class="display-3" style="color: #2e3d4d;">{{ user.userprofile.shop_name }}</h1>
+    </div><br>
+    <div class="row justify-content-center">
+        <form class="d-flex">
+            <input name="searched_customer" class="form-control me-2" type="search" placeholder="Search for a customer" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+</div>
+</div>
 {% endblock %}
