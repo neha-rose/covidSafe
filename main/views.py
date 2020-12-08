@@ -9,7 +9,10 @@ from .models import Customer
 
 
 def welcomepage(request):
-    return render(request, "main/welcome.html", {})
+    if request.user.is_authenticated:
+        return redirect('main:home')
+    else:
+        return render(request, "main/welcome.html", {})
 
 def register(request):
     if request.method == 'POST':
