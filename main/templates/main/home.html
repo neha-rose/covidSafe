@@ -1,9 +1,8 @@
 {% extends "main/base.html" %}
 {% block content %}
-<div class="container">
-<div class="row">
 {% include "main/sidebar.html" %}
-<div id="page-content-wrapper">
+<div class="content">
+  <div class="container">
     <div class="row justify-content-center">
         <h1 class="display-3" style="color: #2e3d4d;">{{ user.userprofile.shop_name }}</h1>
     </div><br>
@@ -12,8 +11,31 @@
             <input name="searched_customer" class="form-control me-2" type="search" placeholder="Search for a customer" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
+    </div><br>
+    <div class="row justify-content-center">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Phone No.</th>
+                <th scope="col">Address</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for customer in customers %}
+            {% if customer.cust_name == searched_customer %}
+              <tr>
+                <td>{{ customer.cust_name }}</td>
+                <td>{{ customer.cust_age }}</td>
+                <td>{{ customer.cust_ph_no }}</td>
+                <td>{{ customer.cust_address }}</td>
+              </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+          </table>
     </div>
-</div>
-</div>
+  </div>
 </div>
 {% endblock %}

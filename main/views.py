@@ -62,7 +62,8 @@ def logout_req(request):
 
 @login_required
 def homepage(request):
-    return render(request, "main/home.html", {})
+    customers = Customer.objects.filter(user=request.user)
+    return render(request, "main/home.html", {'customers': customers})
 
 def storevisit(request):
     return render(request, "main/storevisit.html", {})      
