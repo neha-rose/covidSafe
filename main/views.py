@@ -1,11 +1,12 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import render, redirect
-from .forms import RegisterForm, UserProfileForm
+from django.shortcuts import render, redirect, reverse
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .models import Customer
+from django.core.paginator import Paginator
 
 
 def welcomepage(request):
@@ -63,10 +64,65 @@ def logout_req(request):
 @login_required
 def homepage(request):
     customers = Customer.objects.filter(user=request.user)
-    return render(request, "main/home.html", {'customers': customers})
+    searched_customer = request.GET.get('searched_customer')
+    if searched_customer:
+        search_list = customers.filter(cust_name__icontains=searched_customer)
+        p = Paginator(search_list, 10)
+        page_num = request.GET.get('page', 1)
+        page = p.page(page_num)
+    else:
+        page = {}
+        search_list = {}
+    customer_id = request.POST.get('cust')
+    func = request.POST.get('func')
+    if func=='edit':
+        if customer_id is None:
+            messages.error(request, f"No customer selected!")
+        else:
+            return redirect(reverse('main:editcustomer')+'?cust=%s' %customer_id)
+    elif func=='storevisit':
+        if customer_id is None:
+            messages.error(request, f"No customer selected!")
+        else:
+            return redirect(reverse('main:storevisit')+'?cust=%s' %customer_id)
+    elif func=='homedelivery':
+        if customer_id is None:
+            messages.error(request, f"No customer selected!")
+        else:
+            return redirect(reverse('main:homedelivery')+'?cust=%s' %customer_id)
+    elif func=='contacttracing':
+        if customer_id is None:
+            messages.error(request, f"No customer selected!")
+        else:
+            return redirect(reverse('main:contacttracing')+'?cust=%s' %customer_id)
+    context = {'page': page, 'searched_customer': searched_customer, 'search_list': search_list}
+    return render(request, "main/home.html", context)
 
+@login_required
 def storevisit(request):
-    return render(request, "main/storevisit.html", {})      
+    customer_id = request.GET.get('cust')
+    if customer_id is None:
+        messages.error(request, f"No customer selected!")
+        return redirect('main:home')
+    customers = Customer.objects.filter(user=request.user)
+    try:
+        cust = customers.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Customer doesn't exist!")
+        return redirect('main:home')
+    if request.method == 'POST':
+        form = StoreVisitForm(request.POST)
+        if form.is_valid():
+            storevisit = form.save(commit=False)
+            storevisit.cust_id = cust
+            storevisit.save()
+            messages.success(request, f"Store visit information recorded!")
+            return redirect('main:home')
+        else:
+            messages.error(request, "Please enter the details in correct format.")
+    else:
+        form = StoreVisitForm()
+    return render(request, "main/storevisit.html", {'form': form})      
     
 
 def homedelivery(request):

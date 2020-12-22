@@ -26,7 +26,7 @@ class Employee(models.Model):
 
 class StoreVisit(models.Model):
     visit_id = models.AutoField(primary_key=True)
-    body_temp = models.DecimalField(max_digits=3,decimal_places=2)
+    body_temp = models.DecimalField(max_digits=5,decimal_places=2)
     visit_date = models.DateField()
     check_in_time = models.TimeField()
     check_out_time = models.TimeField()

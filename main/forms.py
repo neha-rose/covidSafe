@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, StoreVisit
 
 
 class RegisterForm(UserCreationForm):
@@ -25,3 +25,8 @@ class UserProfileForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput()
         }
+
+class StoreVisitForm(forms.ModelForm):
+    class Meta:
+        model = StoreVisit
+        fields = ( 'visit_date', 'body_temp', 'check_in_time', 'check_out_time')

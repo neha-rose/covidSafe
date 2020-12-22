@@ -4,37 +4,76 @@
 <div class="content">
   <div class="container">
     <div class="row justify-content-center">
-        <h1 class="display-3" style="color: #2e3d4d;">{{ user.userprofile.shop_name }}</h1>
+      <h1 class="display-3" style="color: #2e3d4d;">{{ user.userprofile.shop_name }}</h1>
     </div><br>
     <div class="row justify-content-center">
         <form class="d-flex">
-            <input name="searched_customer" class="form-control me-2" type="search" placeholder="Search for a customer" aria-label="Search">
+            <input name="searched_customer" value="{{ request.GET.searched_customer }}" class="form-control me-2" type="search" placeholder="Search for a customer" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div><br>
     <div class="row justify-content-center">
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Age</th>
-                <th scope="col">Phone No.</th>
-                <th scope="col">Address</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for customer in customers %}
-            {% if customer.cust_name == searched_customer %}
-              <tr>
-                <td>{{ customer.cust_name }}</td>
-                <td>{{ customer.cust_age }}</td>
-                <td>{{ customer.cust_ph_no }}</td>
-                <td>{{ customer.cust_address }}</td>
-              </tr>
-            {% endif %}
-            {% endfor %}
-            </tbody>
-          </table>
+      {% if searched_customer and search_list.count != 0 %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Phone No.</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+        <form method="POST">
+        {% csrf_token %}
+        {% for customer in page %}
+          <tr>
+            <div class="form-check">
+            <td><input class="form-check-input" type="radio" name="cust" id="cust{{customer.cust_id}}" value="{{customer.cust_id}}"></td>
+            <td><label class="form-check-label" for="cust{{customer.cust_id}}">{{ customer.cust_name }}</label></td>
+            <td><label class="form-check-label" for="cust{{customer.cust_id}}">{{ customer.cust_age }}</label></td>
+            <td><label class="form-check-label" for="cust{{customer.cust_id}}">{{ customer.cust_ph_no }}</label></td>
+            <td><label class="form-check-label" for="cust{{customer.cust_id}}">{{ customer.cust_address }}</label></td>
+            </div>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <div class="container">
+      <div class="row justify-content-center">
+      <nav aria-label="Search results pages">
+        <ul class="pagination">
+          {% if page.has_previous %}
+          <li class="page-item"><a class="page-link text-info" href="?searched_customer={{searched_customer}}&page={{ page.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          {% if page.has_other_pages %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true">Page {{ page.number }} of {{ page.paginator.num_pages }}</a>
+          </li>
+          {% endif %}
+          {% if page.has_next %}
+          <li class="page-item"><a class="page-link text-info" href="?searched_customer={{searched_customer}}&page={{ page.next_page_number }}">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      </div>
+      <div class="row justify-content-center">
+      <div class="btn-group" role="group">
+        <button type="submit" name="func" value="edit" class="btn btn-info">Edit</button>
+        <button type="submit" name="func" value="storevisit" class="btn btn-info">Add Store Visit</button>
+        <button type="submit" name="func" value="homedelivery" class="btn btn-info">Add Home Delivery Order</button>
+        <button type="submit" name="func" value="contacttracing" class="btn btn-info">Contact Tracing</button>
+      </div>
+      </div>
+      </div>
+      </form>
+      {% elif search_list.count != 0 %}
+      <p class="lead text-center" style="width: 35rem;">Search for a customer to edit their details or add a store visit / home delivery order information or do contact tracing.</p>
+      {% endif %}
+      {% if search_list.count == 0 %}
+      <p class="text-muted">There is no customer named {{ searched_customer }}</p>
+      {% endif %}
     </div>
   </div>
 </div>
