@@ -29,8 +29,16 @@ def register(request):
             login(request, user)
             return redirect('main:home')
         else:
-            messages.error(request, f"Your password can't be too similar to your other personal information or a commonly used password.")
-            messages.error(request, f"Your password must contain atleast 8 characters and can't be entirely numeric.")
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+            for field in profile_form:
+                for error in field.errors:
+                    messages.error(request, f"{error}")
+            for error in profile_form.non_field_errors():
+                messages.error(request, f"{error}")
     else:
         form = RegisterForm()
         profile_form = UserProfileForm()
@@ -77,22 +85,22 @@ def homepage(request):
     func = request.POST.get('func')
     if func=='edit':
         if customer_id is None:
-            messages.error(request, f"No customer selected!")
+            messages.warning(request, f"No customer selected!")
         else:
             return redirect(reverse('main:editcustomer')+'?cust=%s' %customer_id)
     elif func=='storevisit':
         if customer_id is None:
-            messages.error(request, f"No customer selected!")
+            messages.warning(request, f"No customer selected!")
         else:
             return redirect(reverse('main:storevisit')+'?cust=%s' %customer_id)
     elif func=='homedelivery':
         if customer_id is None:
-            messages.error(request, f"No customer selected!")
+            messages.warning(request, f"No customer selected!")
         else:
             return redirect(reverse('main:homedelivery')+'?cust=%s' %customer_id)
     elif func=='contacttracing':
         if customer_id is None:
-            messages.error(request, f"No customer selected!")
+            messages.warning(request, f"No customer selected!")
         else:
             return redirect(reverse('main:contacttracing')+'?cust=%s' %customer_id)
     context = {'page': page, 'searched_customer': searched_customer, 'search_list': search_list}
@@ -102,7 +110,7 @@ def homepage(request):
 def storevisit(request):
     customer_id = request.GET.get('cust')
     if customer_id is None:
-        messages.error(request, f"No customer selected!")
+        messages.warning(request, f"No customer selected!")
         return redirect('main:home')
     customers = Customer.objects.filter(user=request.user)
     try:
@@ -119,7 +127,11 @@ def storevisit(request):
             messages.success(request, f"Store visit information recorded!")
             return redirect('main:home')
         else:
-            messages.error(request, "Please enter the details in correct format.")
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
     else:
         form = StoreVisitForm()
     return render(request, "main/storevisit.html", {'form': form})      
