@@ -1,0 +1,31 @@
+h1 {
+    font-size: 3.5rem;
+}
+hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+}
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+hr.divider {
+    max-width: 10.25rem;
+    border-width: 0.2rem;
+    border-color: #2e3d4d;
+}
+  
+hr.light {
+    border-color: #fff;
+}
+.mt-4,
+.my-4 {
+    margin-top: 1.5rem !important;
+}
+.mb-4,
+.my-4 {
+    margin-bottom: 1.7rem !important;
+}   
