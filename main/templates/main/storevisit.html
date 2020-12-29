@@ -1,18 +1,30 @@
 {% extends "main/base.html" %}
 {% block content %}
-<h1>Add Store visits</h1>
-<br></br>
-<form method="POST">
+{% include "main/sidebar.html" %}
+<div class="content">
+<div class="container">
+<div class="row justify-content-center">
+<h1 class="display-4 p-3" style="color: #2e3d4d;">Add Store Visit</h1>
+</div>
+<div class="row justify-content-center shadow-none p-3 mb-5 bg-light rounded">
+<form class="row g-3" method="POST">
 {% csrf_token %}
-  <label for="date">Date: </label>
-  <input type="date" name="visit_date" required><br>
-  <label for="temp">Body Temperature: </label>
-  <input type="text" name="body_temp" placeholder="In degree Celcius" required><br>
-  <label for="in time">Check-in Time: </label>
-  <input type="time" name="check_in_time" required><br>
-  <label for="out time">Check-out Time: </label>
-  <input type="time" name="check_out_time" required><br>
-  <input type="submit" value="Add">
+  <div class="col-12">
+  <label for="date" class="form-label">Date: </label>
+  <input type="date" name="visit_date" class="form-control" required><br></div>
+  <div class="col-12">
+  <label for="temp" class="form-label">Body Temperature: </label>
+  <input type="text" name="body_temp" class="form-control" placeholder="In degree Celcius" required><br></div>
+  <div class="col-md-6">
+  <label for="in time" class="form-label">Check-in Time: </label>
+  <input type="time" name="check_in_time" class="form-control" required><br></div>
+  <div class="col-md-6">
+  <label for="out time" class="form-label">Check-out Time: </label>
+  <input type="time" name="check_out_time" class="form-control" required><br></div>
+  <div class="col-12">
+  <input type="submit" value="Add" class="btn btn-info"></div>
 </form>
-<br>
+</div>
+</div>
+</div>
 {% endblock %}
