@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile, StoreVisit
+from .models import UserProfile, StoreVisit, HomeDeliveryOrder
 
 
 class RegisterForm(UserCreationForm):
@@ -30,3 +30,8 @@ class StoreVisitForm(forms.ModelForm):
     class Meta:
         model = StoreVisit
         fields = ( 'visit_date', 'body_temp', 'check_in_time', 'check_out_time')
+
+class HomeDeliveryOrderForm(forms.ModelForm):
+    class Meta:
+        model = HomeDeliveryOrder
+        fields = ( 'order_date', 'emp_id', 'order_time')

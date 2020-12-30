@@ -2,10 +2,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .models import Customer
+from .models import Customer, Employee
 from django.core.paginator import Paginator
 
 
@@ -136,9 +136,36 @@ def storevisit(request):
         form = StoreVisitForm()
     return render(request, "main/storevisit.html", {'form': form})      
     
-
+@login_required
 def homedelivery(request):
-    return render(request, "main/homedelivery.html", {})      
+    employees = Employee.objects.filter(user=request.user)
+    customer_id = request.GET.get('cust')
+    if customer_id is None:
+        messages.warning(request, f"No customer selected!")
+        return redirect('main:home')
+    customers = Customer.objects.filter(user=request.user)
+    try:
+        cust = customers.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Customer doesn't exist!")
+        return redirect('main:home')
+    if request.method == 'POST':
+        form = HomeDeliveryOrderForm(request.POST)
+        if form.is_valid():
+            homedelivery = form.save(commit=False)
+            homedelivery.cust_id = cust
+            homedelivery.save()
+            messages.success(request, f"Home delivery information recorded!")
+            return redirect('main:home')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = HomeDeliveryOrderForm()
+    return render(request, "main/homedelivery.html", {'form': form, 'employees': employees})      
     
 
             

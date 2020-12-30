@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block css %}
-    <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/home.css' %}" rel="stylesheet" />
 {% endblock %}
 {% block content %}
 {% include "main/sidebar.html" %}
@@ -16,16 +16,16 @@
 {% csrf_token %}
   <div class="col-12">
   <label for="date" class="form-label">Date</label>
-  <input type="date" name="visit_date" class="form-control" required><br></div>
+  <input type="date" id="date" name="visit_date" class="form-control" required><br></div>
   <div class="col-12">
   <label for="temp" class="form-label">Body Temperature</label>
-  <input type="text" name="body_temp" class="form-control" placeholder="In degree Celcius" required><br></div>
+  <input type="text" id="temp" name="body_temp" class="form-control" placeholder="In degree Celcius" required><br></div>
   <div class="col-md-6">
   <label for="in time" class="form-label">Check-in Time</label>
-  <input type="time" name="check_in_time" class="form-control" required><br></div>
+  <input type="time" id="in time" name="check_in_time" class="form-control" required><br></div>
   <div class="col-md-6">
   <label for="out time" class="form-label">Check-out Time</label>
-  <input type="time" name="check_out_time" class="form-control" required><br></div>
+  <input type="time" id="out time" name="check_out_time" class="form-control" required><br></div>
   <div class="col-12">
   <input type="submit" value="Add" class="btn btn-info"></div>
 </form>

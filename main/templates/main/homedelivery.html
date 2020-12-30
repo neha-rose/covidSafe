@@ -1,30 +1,37 @@
 {% extends "main/base.html" %}
-
+{% load static %}
+{% block css %}
+  <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+{% endblock %}
 {% block content %}
-
-<h1>Add Home deliveries</h1>
-
-<br></br>
-
-
-<form method="POST">
+{% include "main/sidebar.html" %}
+<div class="content">
+<div class="container">
+<div class="row justify-content-center">
+  <h2 class="pt-2" style="color: #2e3d4d;">Add Home Delivery Order</h2>
+</div>
+<hr class="divider my-4"/>
+<div class="row justify-content-center shadow-none p-3 mb-5 bg-light rounded">
+<form class="row g-3" method="POST">
 {% csrf_token %}
-  <label for="date">Date: </label>
-  <input type="date" name="order_date"><br>
-  <label for="order id">Order ID: </label>
-  <input type="text" name="order_id"><br>
-  <label for="cust id">Customer ID: </label>
-  <input type="text" name="cust_id"><br>
-  <label for="emp id">Employee ID: </label>
-  <input type="text" name="emp_id"><br>
-  <label for="time">Time: </label>
-  <input type="time" name="order_time"><br>
+  <div class="col-12">
+  <label for="date" class="form-label">Date</label>
+  <input type="date" id="date" name="order_date" class="form-control" required><br></div>
+  <div class="col-12">
+  <label for="emp id" class="form-label">Employee</label>
+  <select id="emp id" name="emp_id" class="form-control" required>
+    <option selected>Select employee</option>
+    {% for emp in employees %}
+    <option value="{{emp.emp_id}}">{{ emp }}</option>
+    {% endfor %}
+  </select><br></div>
+  <div class="col-12">
+  <label for="time" class="form-label">Time</label>
+  <input type="time" id="time" name="order_time" class="form-control" required><br></div>
+  <div class="col-12">
+  <input type="submit" value="Add" class="btn btn-info"></div>
 </form>
-<br>
-<input type="submit" value="ADD">
-
-
-
-
-
+</div>
+</div>
+</div>
 {% endblock %}
