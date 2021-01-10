@@ -43,7 +43,6 @@ class HomeDeliveryOrder(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     shop_name = models.CharField(max_length=200)
-    admin_password = models.CharField(max_length=200, validators=[MinLengthValidator(8)])
 
     def __str__(self):
         return self.user.username

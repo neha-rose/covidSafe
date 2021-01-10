@@ -21,10 +21,7 @@ class RegisterForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ( 'shop_name', 'admin_password')
-        widgets = {
-            'admin_password': forms.PasswordInput()
-        }
+        fields = ('shop_name',)
 
 class StoreVisitForm(forms.ModelForm):
     class Meta:
