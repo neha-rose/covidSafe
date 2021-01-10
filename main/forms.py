@@ -23,7 +23,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ( 'shop_name', 'admin_password')
         widgets = {
-            'password': forms.PasswordInput()
+            'admin_password': forms.PasswordInput()
         }
 
 class StoreVisitForm(forms.ModelForm):

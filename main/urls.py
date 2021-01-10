@@ -26,4 +26,6 @@ urlpatterns = [
     path("home/", views.homepage, name="home"),
     path("store-visit/", views.storevisit, name="storevisit"),
     path("home-delivery/", views.homedelivery, name="homedelivery"),
+    path("contact-tracing-storevisit/", views.contacttracing_sv, name="contacttracing_sv"),
+    path("contact-tracing-homedelivery/", views.contacttracing_hd, name="contacttracing_hd"),
 ]
