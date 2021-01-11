@@ -28,4 +28,7 @@ urlpatterns = [
     path("home-delivery/", views.homedelivery, name="homedelivery"),
     path("contact-tracing-storevisit/", views.contacttracing_sv, name="contacttracing_sv"),
     path("contact-tracing-homedelivery/", views.contacttracing_hd, name="contacttracing_hd"),
+    path("add-employee/", views.addemployee, name="addemployee"),
+    path("edit-employee/", views.editemployee, name="editemployee"),
+    path("select-employee/", views.selectemployee, name="selectemployee"),
 ]

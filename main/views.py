@@ -1,8 +1,8 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .models import Customer, Employee, StoreVisit, HomeDeliveryOrder
@@ -130,7 +130,7 @@ def storevisit(request):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.error(request, f"{error}")
+                    messages.error(request, f"{field.label}: {error}")
             for error in form.non_field_errors():
                 messages.error(request, f"{error}")
     else:
@@ -161,7 +161,7 @@ def homedelivery(request):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.error(request, f"{error}")
+                    messages.error(request, f"{field.label}: {error}")
             for error in form.non_field_errors():
                 messages.error(request, f"{error}")
     else:
@@ -213,3 +213,58 @@ def contacttracing_hd(request):
     page_num = request.GET.get('page', 1)
     page = p.page(page_num)
     return render(request, "main/contacttracing_hd.html", {'page': page, 'cust': cust})
+
+@login_required
+def addemployee(request):
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            employee = form.save(commit=False)
+            employee.user = request.user
+            employee.save()
+            messages.success(request, f"Employee added!")
+            return redirect('main:addemployee')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = EmployeeForm()
+    return render(request, "main/addemployee.html", {'form': form})
+
+@login_required
+def editemployee(request):
+    employee_id = request.GET.get('emp')
+    if not employee_id:
+        messages.warning(request, f"No employee selected!")
+        return redirect('main:selectemployee')
+    try:
+        instance = Employee.objects.get(emp_id=employee_id)
+    except:
+        messages.error(request, f"Invalid Employee!")
+        return redirect('main:selectemployee')
+    if request.method == 'POST':
+        form = EmployeeForm(data=request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Employee details edited!")
+            return redirect('main:selectemployee')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = EmployeeForm(instance=instance)
+    return render(request, "main/editemployee.html", {'form': form})
+
+@login_required
+def selectemployee(request):
+    employees = Employee.objects.filter(user=request.user)
+    if request.method == 'POST':
+        employee_id = request.POST.get('emp_to_edit')
+        return redirect(reverse('main:editemployee')+'?emp=%s' %employee_id)
+    return render(request, "main/selectemployee.html", {'employees': employees})
