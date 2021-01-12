@@ -2,11 +2,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, AddCustomerForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib import messages
 from .models import Customer, Employee
+from django.views import generic
 from django.core.paginator import Paginator
+from django.urls import reverse_lazy
 
 
 def welcomepage(request):
@@ -66,7 +68,7 @@ def login_req(request):
 
 def logout_req(request):
     logout(request)
-    messages.info(request, "Logged out successfully!")
+    messages.success(request, "Logged out successfully!")
     return redirect("main:welcomepage")  
 
 @login_required
@@ -107,6 +109,21 @@ def homepage(request):
     return render(request, "main/home.html", context)
 
 @login_required
+def addcustomer(request):
+    if request.method == "POST":
+        form = AddCustomerForm(request.POST or None)
+        if form.is_valid():
+            customer = form.save( commit = False )
+            customer.user = request.user
+            customer.save()
+            messages.success(request, "New customer added successfully!")    
+            return redirect('main:home')
+        else:
+            messages.error(request, "Invalid. Please try again") 
+    else: 
+        return render(request, "main/addcustomer.html", {})
+
+
 def storevisit(request):
     customer_id = request.GET.get('cust')
     if customer_id is None:
@@ -167,5 +184,4 @@ def homedelivery(request):
         form = HomeDeliveryOrderForm()
     return render(request, "main/homedelivery.html", {'form': form, 'employees': employees})      
     
-
             

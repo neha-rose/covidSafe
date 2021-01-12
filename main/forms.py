@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile, StoreVisit, HomeDeliveryOrder
-
+from .models import UserProfile, StoreVisit, HomeDeliveryOrder, Customer
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Enter a valid email address.')
@@ -35,3 +34,8 @@ class HomeDeliveryOrderForm(forms.ModelForm):
     class Meta:
         model = HomeDeliveryOrder
         fields = ( 'order_date', 'emp_id', 'order_time')
+
+class AddCustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ( 'cust_id', 'cust_name', 'cust_age', 'cust_ph_no', 'cust_address')        

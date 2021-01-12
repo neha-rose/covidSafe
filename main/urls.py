@@ -16,6 +16,7 @@ Including another URLconf
 from django.urls import path
 from . import views
 
+
 app_name = "main"
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path("login/", views.login_req, name="login"),
     path("logout", views.logout_req, name="logout"),
     path("home/", views.homepage, name="home"),
-    path("store-visit/", views.storevisit, name="storevisit"),
-    path("home-delivery/", views.homedelivery, name="homedelivery"),
+    path("addcustomer/", views.addcustomer, name="addcustomer"),
+    path("storevisit/", views.storevisit, name="storevisit"),
+    path("homedelivery/", views.homedelivery, name="homedelivery"),
 ]
