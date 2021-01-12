@@ -1,9 +1,9 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.shortcuts import render, redirect, reverse
 from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib import messages
 from .models import Customer, Employee, StoreVisit, HomeDeliveryOrder
 from django.core.paginator import Paginator
@@ -268,3 +268,28 @@ def selectemployee(request):
         employee_id = request.POST.get('emp_to_edit')
         return redirect(reverse('main:editemployee')+'?emp=%s' %employee_id)
     return render(request, "main/selectemployee.html", {'employees': employees})
+
+@login_required
+def settings(request):
+    return render(request, "main/settings.html", {})
+
+@login_required
+def changepassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('main:settings')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'main/changepassword.html', {
+        'form': form
+    })
