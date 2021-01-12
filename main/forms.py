@@ -33,10 +33,16 @@ class HomeDeliveryOrderForm(forms.ModelForm):
         model = HomeDeliveryOrder
         fields = ( 'order_date', 'emp_id', 'order_time')
 
-class AddCustomerForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ( 'cust_id', 'cust_name', 'cust_age', 'cust_ph_no', 'cust_address')        
+        fields = ( 'cust_name', 'cust_age', 'cust_ph_no', 'cust_address') 
+        widgets = {
+            'cust_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'cust_age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'cust_ph_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'cust_address': forms.TextInput(attrs={'class': 'form-control'}),
+        }  
 class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee

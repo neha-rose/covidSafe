@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm, AddCustomerForm
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm, CustomerForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .models import Customer, Employee, StoreVisit, HomeDeliveryOrder
@@ -112,18 +112,57 @@ def homepage(request):
 @login_required
 def addcustomer(request):
     if request.method == "POST":
-        form = AddCustomerForm(request.POST or None)
+        form = CustomerForm(request.POST or None)
         if form.is_valid():
             customer = form.save( commit = False )
             customer.user = request.user
             customer.save()
-            messages.success(request, "New customer added successfully!")    
-            return redirect('main:home')
+            messages.success(request, f"New customer added successfully!")    
+            return redirect('main:addcustomer')
         else:
-            messages.error(request, "Invalid. Please try again") 
-    else: 
-        return render(request, "main/addcustomer.html", {})
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = CustomerForm()
+    return render(request, "main/addcustomer.html", {'form': form})
 
+@login_required
+def editcustomer(request):
+    customer_id = request.GET.get('cust')
+    if not customer_id:
+        messages.warning(request, f"No customer selected!")
+        return redirect('main:selectcustomer')
+    try:
+        instance = customer.objects.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Invalid Customer!")
+        return redirect('main:selectcustomer')
+    if request.method == 'POST':
+        form = CustomerForm(data=request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Customer details edited!")
+            return redirect('main:selectcustomer')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = CustomerForm(instance=instance)
+    return render(request, "main/editcustomer.html", {'form': form})
+
+@login_required
+def selectcustomer(request):
+    customers = Customer.objects.filter(user=request.user)
+    if request.method == 'POST':
+        customer_id = request.POST.get('cust_to_edit')
+        return redirect(reverse('main:editcustomer')+'?cust=%s' %customer_id)
+    return render(request, "main/selectcustomer.html", {'customers': customers})
 
 def storevisit(request):
     customer_id = request.GET.get('cust')

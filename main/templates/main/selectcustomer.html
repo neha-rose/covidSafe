@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block css %}
+  <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+{% include "main/sidebar.html" %}
+<div class="content">
+<div class="container">
+<div class="row justify-content-center">
+<h2 class="pt-2" style="color: #2e3d4d;">Edit Customer</h2>
+</div>
+<hr class="divider my-4"/>
+<div class="justify-content-center shadow-none p-3 mb-5 bg-light rounded">
+<form method="POST">
+    {% csrf_token %}
+    <label for="cust_to_edit" class="form-label">Select customer to edit</label>
+    <select id="cust_to_edit" name="cust_to_edit" class="form-control" required>
+        <option>Select customer</option>
+        {% for cust in customers %}
+        <option value="{{cust.cust_id}}">{{ cust }}</option>
+        {% endfor %}
+    </select><br>
+    <input type="submit" value="Go" class="btn btn-info">
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
