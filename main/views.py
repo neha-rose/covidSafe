@@ -2,13 +2,15 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm, CustomerForm
 from django.contrib import messages
 from .models import Customer, Employee, StoreVisit, HomeDeliveryOrder
 from django.core.paginator import Paginator
 import datetime
 from dateutil.relativedelta import relativedelta
+from django.views import generic
+from django.urls import reverse_lazy
 
 def welcomepage(request):
     if request.user.is_authenticated:
@@ -67,7 +69,7 @@ def login_req(request):
 
 def logout_req(request):
     logout(request)
-    messages.info(request, "Logged out successfully!")
+    messages.success(request, "Logged out successfully!")
     return redirect("main:welcomepage")  
 
 @login_required
@@ -108,6 +110,53 @@ def homepage(request):
     return render(request, "main/home.html", context)
 
 @login_required
+def addcustomer(request):
+    if request.method == "POST":
+        form = CustomerForm(request.POST or None)
+        if form.is_valid():
+            customer = form.save( commit = False )
+            customer.user = request.user
+            customer.save()
+            messages.success(request, f"New customer added successfully!")    
+            return redirect('main:addcustomer')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = CustomerForm()
+    return render(request, "main/addcustomer.html", {'form': form})
+
+@login_required
+def editcustomer(request):
+    customer_id = request.GET.get('cust')
+    if not customer_id:
+        messages.warning(request, f"No customer selected!")
+        return redirect('main:home')
+    customers = Customer.objects.filter(user=request.user)
+    try:
+        instance = customers.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Invalid Customer!")
+        return redirect('main:home')
+    if request.method == 'POST':
+        form = CustomerForm(data=request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Customer details edited!")
+            return redirect('main:home')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = CustomerForm(instance=instance)
+    return render(request, "main/editcustomer.html", {'form': form})
+
 def storevisit(request):
     customer_id = request.GET.get('cust')
     if customer_id is None:
@@ -168,6 +217,7 @@ def homedelivery(request):
         form = HomeDeliveryOrderForm()
     return render(request, "main/homedelivery.html", {'form': form, 'employees': employees})      
     
+            
 @login_required
 def contacttracing_sv(request):
     customer_id = request.GET.get('cust')
@@ -240,8 +290,9 @@ def editemployee(request):
     if not employee_id:
         messages.warning(request, f"No employee selected!")
         return redirect('main:selectemployee')
+    employees = Employee.objects.filter(user=request.user)
     try:
-        instance = Employee.objects.get(emp_id=employee_id)
+        instance = employees.get(emp_id=employee_id)
     except:
         messages.error(request, f"Invalid Employee!")
         return redirect('main:selectemployee')

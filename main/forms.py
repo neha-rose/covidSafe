@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from .models import UserProfile, StoreVisit, HomeDeliveryOrder, Employee
+from .models import UserProfile, StoreVisit, HomeDeliveryOrder, Employee, Customer
 
 
 class RegisterForm(UserCreationForm):
@@ -33,6 +33,16 @@ class HomeDeliveryOrderForm(forms.ModelForm):
         model = HomeDeliveryOrder
         fields = ( 'order_date', 'emp_id', 'order_time')
 
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ( 'cust_name', 'cust_age', 'cust_ph_no', 'cust_address') 
+        widgets = {
+            'cust_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'cust_age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'cust_ph_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'cust_address': forms.TextInput(attrs={'class': 'form-control'}),
+        }  
 class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee

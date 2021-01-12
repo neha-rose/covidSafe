@@ -16,6 +16,7 @@ Including another URLconf
 from django.urls import path
 from . import views
 
+
 app_name = "main"
 
 urlpatterns = [
@@ -33,4 +34,6 @@ urlpatterns = [
     path("select-employee/", views.selectemployee, name="selectemployee"),
     path("settings/", views.settings, name="settings"),
     path("change-password/", views.changepassword, name="changepassword"),
+    path("add-customer/", views.addcustomer, name="addcustomer"),
+    path("edit-customer/", views.editcustomer, name="editcustomer"),
 ]
