@@ -1,0 +1,90 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block css %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+{% include "main/sidebar.html" %}
+<div class="content">
+<div class="container">
+    <div class="row justify-content-center">
+        <h2 class="pt-2" style="color: #2e3d4d;">Contact Tracing<small class="text-muted">  (Store Visits)</small></h2>
+    </div>
+    <hr class="divider my-4"/>
+    <div class="row pb-3">
+        <div class="btn-group" role="group">
+            <a class="btn btn-info disabled">Store Visits</a>
+            <a href="/contact-tracing-homedelivery?cust={{cust.cust_id}}" class="btn btn-outline-info">Home Delivery</a>
+        </div>
+    </div>
+    {% if page %}
+        <div class="row justify-content-center table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Phone No.</th>
+                        <th scope="col">Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in page %}
+                    <tr>
+                        <td>{{ contact.visit_date }}</td>
+                        <td>{{ contact.cust_id.cust_name }}</td>
+                        <td>{{ contact.cust_id.cust_age }}</td>
+                        <td>{{ contact.cust_id.cust_ph_no }}</td>
+                        <td>{{ contact.cust_id.cust_address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row justify-content-center p-3">
+            <nav>
+                <ul class="pagination">
+                  {% if page.has_previous %}
+                  <li class="page-item"><a class="page-link text-info" href="?cust={{cust.cust_id}}&page={{ page.previous_page_number }}">Previous</a></li>
+                  {% endif %}
+                  {% if page.has_other_pages %}
+                  <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">Page {{ page.number }} of {{ page.paginator.num_pages }}</a>
+                  </li>
+                  {% endif %}
+                  {% if page.has_next %}
+                  <li class="page-item"><a class="page-link text-info" href="?cust={{cust.cust_id}}&page={{ page.next_page_number }}">Next</a></li>
+                  {% endif %}
+                </ul>
+              </nav>
+        </div>
+        {% else %}
+        <p class="text-muted text-center p-4">No contacts.</p>
+        {% endif %}
+        {% if storevisits %}
+        <h5>{{cust}}'s body temperature records <small class="text-muted">(Past 2 months)</small></h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Body Temperature (In degree celsius)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for storevisit in storevisits %}
+                        {% if storevisit.visit_date >= two_months_before.date %}
+                        <tr class="{% if storevisit.body_temp > 38 or storevisit.body_temp < 35 %}table-danger{% elif storevisit.body_temp > 37.5 %}table-warning{% endif %}">
+                            <td>{{storevisit.visit_date}}</td>
+                            <td>{{storevisit.body_temp}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+</div>
+</div>
+{% endblock %}

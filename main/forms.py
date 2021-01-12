@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile, StoreVisit, HomeDeliveryOrder, Customer
+from .models import UserProfile, StoreVisit, HomeDeliveryOrder, Employee, Customer
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Enter a valid email address.')
@@ -20,10 +21,7 @@ class RegisterForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ( 'shop_name', 'admin_password')
-        widgets = {
-            'password': forms.PasswordInput()
-        }
+        fields = ('shop_name',)
 
 class StoreVisitForm(forms.ModelForm):
     class Meta:
@@ -39,3 +37,13 @@ class AddCustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ( 'cust_id', 'cust_name', 'cust_age', 'cust_ph_no', 'cust_address')        
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        fields = ( 'emp_name', 'emp_age', 'emp_ph_no', 'emp_address')
+        widgets = {
+            'emp_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'emp_age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'emp_ph_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'emp_address': forms.TextInput(attrs={'class': 'form-control'}),
+        }

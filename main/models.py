@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator
 
 # Create your models here.
 class Customer(models.Model):
@@ -42,7 +43,6 @@ class HomeDeliveryOrder(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     shop_name = models.CharField(max_length=200)
-    admin_password = models.CharField(max_length=200)
 
     def __str__(self):
         return self.user.username

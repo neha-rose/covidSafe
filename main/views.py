@@ -1,15 +1,16 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, AddCustomerForm
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from .forms import RegisterForm, UserProfileForm, StoreVisitForm, HomeDeliveryOrderForm, EmployeeForm, AddCustomerForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .models import Customer, Employee
-from django.views import generic
+from .models import Customer, Employee, StoreVisit, HomeDeliveryOrder
 from django.core.paginator import Paginator
+import datetime
+from dateutil.relativedelta import relativedelta
+from django.views import generic
 from django.urls import reverse_lazy
-
 
 def welcomepage(request):
     if request.user.is_authenticated:
@@ -81,8 +82,8 @@ def homepage(request):
         page_num = request.GET.get('page', 1)
         page = p.page(page_num)
     else:
-        page = {}
-        search_list = {}
+        page = None
+        search_list = None
     customer_id = request.POST.get('cust')
     func = request.POST.get('func')
     if func=='edit':
@@ -104,7 +105,7 @@ def homepage(request):
         if customer_id is None:
             messages.warning(request, f"No customer selected!")
         else:
-            return redirect(reverse('main:contacttracing')+'?cust=%s' %customer_id)
+            return redirect(reverse('main:contacttracing_sv')+'?cust=%s' %customer_id)
     context = {'page': page, 'searched_customer': searched_customer, 'search_list': search_list}
     return render(request, "main/home.html", context)
 
@@ -146,7 +147,7 @@ def storevisit(request):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.error(request, f"{error}")
+                    messages.error(request, f"{field.label}: {error}")
             for error in form.non_field_errors():
                 messages.error(request, f"{error}")
     else:
@@ -177,7 +178,7 @@ def homedelivery(request):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.error(request, f"{error}")
+                    messages.error(request, f"{field.label}: {error}")
             for error in form.non_field_errors():
                 messages.error(request, f"{error}")
     else:
@@ -185,3 +186,103 @@ def homedelivery(request):
     return render(request, "main/homedelivery.html", {'form': form, 'employees': employees})      
     
             
+@login_required
+def contacttracing_sv(request):
+    customer_id = request.GET.get('cust')
+    if customer_id is None:
+        messages.warning(request, f"No customer selected!")
+        return redirect('main:home')
+    customers = Customer.objects.filter(user=request.user)
+    try:
+        cust = customers.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Customer doesn't exist!")
+        return redirect('main:home')
+    storevisits = cust.storevisit_set.all().order_by('-visit_date','-check_in_time')
+    contacts = []
+    other_storevisits = StoreVisit.objects.all().exclude(cust_id=cust)
+    for storevisit in storevisits:
+        for other_storevisit in other_storevisits:
+            if other_storevisit.visit_date == storevisit.visit_date:
+                if (other_storevisit.check_in_time >= storevisit.check_in_time and other_storevisit.check_in_time <= storevisit.check_out_time) or (other_storevisit.check_out_time >= storevisit.check_in_time and other_storevisit.check_out_time <= storevisit.check_out_time) or (other_storevisit.check_in_time <= storevisit.check_in_time and other_storevisit.check_out_time >= storevisit.check_out_time):
+                    contacts.append(other_storevisit)
+    p = Paginator(contacts, 20)
+    page_num = request.GET.get('page', 1)
+    page = p.page(page_num)
+    now = datetime.datetime.now()
+    two_months_before = now + relativedelta(months=-2)
+    context = {'page': page, 'cust': cust, 'two_months_before': two_months_before, 'storevisits': storevisits}
+    return render(request, "main/contacttracing_sv.html", context)
+
+@login_required
+def contacttracing_hd(request):
+    customer_id = request.GET.get('cust')
+    if customer_id is None:
+        messages.warning(request, f"No customer selected!")
+        return redirect('main:home')
+    customers = Customer.objects.filter(user=request.user)
+    try:
+        cust = customers.get(cust_id=customer_id)
+    except:
+        messages.error(request, f"Customer doesn't exist!")
+        return redirect('main:home')
+    homedeliveryorders = cust.homedeliveryorder_set.all().order_by('-order_date','-order_time')
+    p = Paginator(homedeliveryorders, 20)
+    page_num = request.GET.get('page', 1)
+    page = p.page(page_num)
+    return render(request, "main/contacttracing_hd.html", {'page': page, 'cust': cust})
+
+@login_required
+def addemployee(request):
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            employee = form.save(commit=False)
+            employee.user = request.user
+            employee.save()
+            messages.success(request, f"Employee added!")
+            return redirect('main:addemployee')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = EmployeeForm()
+    return render(request, "main/addemployee.html", {'form': form})
+
+@login_required
+def editemployee(request):
+    employee_id = request.GET.get('emp')
+    if not employee_id:
+        messages.warning(request, f"No employee selected!")
+        return redirect('main:selectemployee')
+    try:
+        instance = Employee.objects.get(emp_id=employee_id)
+    except:
+        messages.error(request, f"Invalid Employee!")
+        return redirect('main:selectemployee')
+    if request.method == 'POST':
+        form = EmployeeForm(data=request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Employee details edited!")
+            return redirect('main:selectemployee')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"{error}")
+    else:
+        form = EmployeeForm(instance=instance)
+    return render(request, "main/editemployee.html", {'form': form})
+
+@login_required
+def selectemployee(request):
+    employees = Employee.objects.filter(user=request.user)
+    if request.method == 'POST':
+        employee_id = request.POST.get('emp_to_edit')
+        return redirect(reverse('main:editemployee')+'?emp=%s' %employee_id)
+    return render(request, "main/selectemployee.html", {'employees': employees})

@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block css %}
+  <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+{% include "main/sidebar.html" %}
+<div class="content">
+<div class="container">
+<div class="row justify-content-center">
+<h2 class="pt-2" style="color: #2e3d4d;">Edit Employee</h2>
+</div>
+<hr class="divider my-4"/>
+<div class="row justify-content-center shadow-none p-3 mb-5 bg-light rounded">
+<form class="row g-3" method="POST">
+    {% csrf_token %}
+    <div class="col-12">
+    <label for="{{ form.emp_name.id_for_label }}" class="form-label">Name</label>
+    {{ form.emp_name }}<br></div>
+    <div class="col-md-6">
+    <label for="{{ form.emp_age.id_for_label }}" class="form-label">Age</label>
+    {{ form.emp_age }}<br></div>
+    <div class="col-md-6">
+    <label for="{{ form.emp_ph_no.id_for_label }}" class="form-label">Phone Number</label>
+    {{ form.emp_ph_no }}<br></div>
+    <div class="col-12">
+    <label for="{{ form.emp_address.id_for_label }}" class="form-label">Address</label>
+    {{ form.emp_address }}<br></div>
+    <div class="col-12">
+    <input type="submit" value="Save" class="btn btn-info"></div>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
